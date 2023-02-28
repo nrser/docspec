@@ -230,13 +230,14 @@ def discover(directory: t.Union[str, Path]) -> t.Iterable[DiscoveryResult]:
   """
     # Find modules rooted under `directory`, which are the "packages" we're after
   for found in find_module_roots(directory):
-    if found.is_module_file:
-      yield DiscoveryResult.Module(
-        name=found.name, filename=found.search_path
-      )
-    else:
+    print("HERE: {!r}".format(found))
+    if found.is_package_dir:
       yield DiscoveryResult.Package(
         name=found.name, directory=found.search_path
+      )
+    else:
+      yield DiscoveryResult.Module(
+        name=found.name, filename=found.search_path
       )
 
 

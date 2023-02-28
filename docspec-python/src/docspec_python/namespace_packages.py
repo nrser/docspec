@@ -291,7 +291,7 @@ class FoundModule:
 
   @property
   def is_module_file(self) -> bool:
-    return not self.path.is_file()
+    return self.path.is_file()
 
   @property
   def search_path(self) -> str:
@@ -304,8 +304,13 @@ class FoundModule:
     return textwrap.dedent(
         f"""
       {self.__class__.__name__}(
-          name      = {self.name!r}
-          rel_path  = {self.rel_path!s}
+          name            = {self.name!r}
+          path            = {self.path!r}
+          rel_path        = {self.rel_path!r}
+          search_dir      = {self.search_dir!r}
+          search_path     = {self.search_path!r}
+          is_package_dir  = {self.is_package_dir!r}
+          is_module_file  = {self.is_module_file!r}
       )
       """
     )
