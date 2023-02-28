@@ -43,6 +43,7 @@ from nr.util.fs import recurse_directory
 
 from docspec import Argument, Module
 from .parser import Parser, ParserOptions
+from .namespace_packages import find_module_roots
 
 
 def load_python_modules(
@@ -227,17 +228,16 @@ def discover(directory: t.Union[str, Path]) -> t.Iterable[DiscoveryResult]:
 
   :raises OSError: Propagated from #os.listdir().
   """
-
-  # TODO (@NiklasRosenstein): Introspect the contents of __init__.py files to determine
-  #   if we're looking at a namespace package. If we do, continue recursively.
-
-  for name in os.listdir(directory):
-    if name.endswith('.py') and name.count('.') == 1:
-      yield DiscoveryResult.Module(name[:-3], os.path.join(directory, name))
+    # Find modules rooted under `directory`, which are the "packages" we're after
+  for found in find_module_roots(directory):
+    if found.is_module_file:
+      yield DiscoveryResult.Module(
+        name=found.name, filename=found.search_path
+      )
     else:
-      full_path = os.path.join(directory, name, '__init__.py')
-      if os.path.isfile(full_path):
-        yield DiscoveryResult.Package(name, os.path.join(directory, name))
+      yield DiscoveryResult.Package(
+        name=found.name, directory=found.search_path
+      )
 
 
 def format_arglist(args: t.Sequence[Argument], render_type_hints: bool = True) -> str:

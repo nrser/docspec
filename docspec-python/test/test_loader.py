@@ -35,7 +35,7 @@ import docspec_python
 
 
 def _assert_is_docspec_python_module(modules: t.List[docspec.Module]) -> None:
-  assert sorted(m.name for m in modules) == ['docspec_python', 'docspec_python.__main__', 'docspec_python.parser']
+  assert sorted(m.name for m in modules) == ['docspec_python', 'docspec_python.__main__', 'docspec_python.namespace_packages', 'docspec_python.parser']
 
 
 def test_discovery_from_sys_path() -> None:
